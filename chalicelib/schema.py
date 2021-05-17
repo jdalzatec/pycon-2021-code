@@ -8,5 +8,4 @@ SCHEMA = {
         "allowed": ["uncompleted", "completed"],
         "default": "uncompleted",
     },
-    "due_date": {"type": "datetime", "nullable": True, "default": None},
 }
