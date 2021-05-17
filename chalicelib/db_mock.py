@@ -22,10 +22,10 @@ class LocalDB(CRUD):
     def get_item(self, item_id):
         return self.db.get(item_id)
 
-    def update_item(self, item_id, body):
+    def update_item(self, item_id, **body):
         if self.db.get(item_id):
-            self.db[item_id] = body
-            return body
+            self.db[item_id] = {**self.db[item_id], **body}
+            return self.db[item_id]
 
         return None
 
