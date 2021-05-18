@@ -66,3 +66,8 @@ esquema
     }
 }
 ```
+
+npm install -g aws-cdk
+cdk --version
+1.104.0 (build 44d3383)
+

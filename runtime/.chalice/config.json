@@ -4,9 +4,8 @@
   "stages": {
     "dev": {
       "environment_variables": {
-        "APP_TABLE_NAME": "to-do-app"
-      },
-      "api_gateway_stage": "api"
+        "APP_TABLE_NAME": "to-do-table"
+      }
     }
   }
 }
