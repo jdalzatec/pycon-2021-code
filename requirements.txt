@@ -1,2 +1,3 @@
+boto3==1.17.74
 Cerberus==1.3.4
 chalice==1.23.0

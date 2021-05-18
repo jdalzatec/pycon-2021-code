@@ -3,6 +3,9 @@
   "app_name": "to-do",
   "stages": {
     "dev": {
+      "environment_variables": {
+        "APP_TABLE_NAME": "to-do-app"
+      },
       "api_gateway_stage": "api"
     }
   }

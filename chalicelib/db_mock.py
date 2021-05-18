@@ -16,6 +16,9 @@ class LocalDB(CRUD):
 
     def add_item(self, **body):
         item_id = body["id"]
+        if item_id in self.db:
+            return None
+
         self.db[item_id] = body
         return body
 
@@ -23,17 +26,17 @@ class LocalDB(CRUD):
         return self.db.get(item_id)
 
     def update_item(self, item_id, **body):
-        if self.db.get(item_id):
-            self.db[item_id] = {**self.db[item_id], **body}
-            return self.db[item_id]
+        if not self.db.get(item_id):
+            return None
 
-        return None
+        self.db[item_id] = {**self.db[item_id], **body}
+        return self.db[item_id]
 
     def delete_item(self, item_id):
-        if self.db.get(item_id):
-            return self.db.pop(item_id)
+        if not self.db.get(item_id):
+            return None
 
-        return None
+        return self.db.pop(item_id)
 
     def get_all_items(self):
         return [value for _, value in self.db.items()]

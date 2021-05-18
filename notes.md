@@ -57,12 +57,12 @@ esquema
 
 ```json
 {
-  "description": {"type": "str"},
-  "uid": {"type: "str"},
-  "state": {"type: "str", "allowed": ["unstarted", "started", "completed"]},
-  "metadata": {
-    "type": "object"
-  },
-  "username": {"type": "str"}
+    "description": {"required": True, "type": "string"},
+    "id": {"type": "string", "default_setter": lambda _: str(uuid4())},
+    "state": {
+        "type": "string",
+        "allowed": ["uncompleted", "completed"],
+        "default": "uncompleted",
+    }
 }
 ```

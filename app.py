@@ -1,7 +1,7 @@
 from cerberus import Validator
 from chalice import Chalice, Response
 
-from chalicelib.db_mock import get_db
+from chalicelib.db_dynamo import get_db
 from chalicelib.schema import SCHEMA
 
 app = Chalice(app_name="to-do")
@@ -21,7 +21,10 @@ def create_todo():
     if validator.validate(body):
         body = validator.normalized(body)
         result = get_db().add_item(**body)
-        return Response(body={"result": result}, status_code=200)
+        if result:
+            return Response(body={"result": result}, status_code=200)
+
+        return Response(body={"error": "Item id already exists"}, status_code=400)
 
     return Response(body={"error": validator.errors}, status_code=400)
 
