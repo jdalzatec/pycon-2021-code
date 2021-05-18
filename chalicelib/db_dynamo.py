@@ -1,7 +1,8 @@
-from logging import exception
 import os
+from functools import reduce
 
 import boto3
+from boto3.dynamodb.conditions import Attr
 
 from chalicelib.crud import CRUD
 
@@ -54,5 +55,10 @@ class DynamoDB(CRUD):
         except dynamodb_resource.meta.client.exceptions.ConditionalCheckFailedException:
             return None
 
-    def get_all_items(self):
+    def get_all_items(self, query={}):
+        if query:
+            attributes = [Attr(key).eq(value) for key, value in query.items()]
+            filter_expression = reduce(lambda x, y: x & y, attributes)
+            return self.table.scan(FilterExpression=filter_expression).get("Items")
+
         return self.table.scan().get("Items")

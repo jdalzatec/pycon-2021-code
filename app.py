@@ -64,3 +64,17 @@ def delete_todo(todo_id):
 def read_all_todos():
     result = get_db().get_all_items()
     return Response(body={"result": result}, status_code=200)
+
+
+@app.route("/to-do/completed", methods=["GET"])
+def read_all_completed_todos():
+    result = get_db().get_all_items({"state": "completed"})
+
+    return Response(body={"result": result}, status_code=200)
+
+
+@app.route("/to-do/uncompleted", methods=["GET"])
+def read_all_uncompleted_todos():
+    result = get_db().get_all_items({"state": "uncompleted"})
+
+    return Response(body={"result": result}, status_code=200)
