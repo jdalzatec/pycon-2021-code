@@ -22,7 +22,7 @@ def create_todo():
         body = validator.normalized(body)
         result = get_db().add_item(**body)
         if result:
-            return Response(body={"result": result}, status_code=200)
+            return Response(body={"result": "Item inserted"}, status_code=200)
 
         return Response(body={"error": "Item id already exists"}, status_code=400)
 
@@ -44,7 +44,7 @@ def update_todo(todo_id):
     if validator.validate(body, update=True):
         result = get_db().update_item(todo_id, **body)
         if result:
-            return Response(body={"result": result}, status_code=200)
+            return Response(body={"result": "Item updated"}, status_code=200)
 
         return Response(body={"error": "Item not found"}, status_code=400)
 
@@ -55,7 +55,7 @@ def update_todo(todo_id):
 def delete_todo(todo_id):
     result = get_db().delete_item(todo_id)
     if result:
-        return Response(body={"result": result}, status_code=200)
+        return Response(body={"result": "Item deleted"}, status_code=200)
 
     return Response(body={"error": "Item not found"}, status_code=400)
 

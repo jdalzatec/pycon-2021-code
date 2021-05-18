@@ -31,13 +31,28 @@ class DynamoDB(CRUD):
             return None
 
     def get_item(self, item_id):
-        pass
+        response = self.table.get_item(Key={"id": item_id})
+        return response.get("Item")
 
     def update_item(self, item_id, **body):
-        pass
+        try:
+            body.pop("id", None)
+            return self.table.update_item(
+                Key={"id": item_id},
+                AttributeUpdates={key: {"Value": value} for key, value in body.items()},
+                Expected={"id": {"Value": item_id, "Exists": True}},
+            )
+        except dynamodb_resource.meta.client.exceptions.ConditionalCheckFailedException:
+            return None
 
     def delete_item(self, item_id):
-        pass
+        try:
+            return self.table.delete_item(
+                Key={"id": item_id},
+                Expected={"id": {"Value": item_id, "Exists": True}},
+            )
+        except dynamodb_resource.meta.client.exceptions.ConditionalCheckFailedException:
+            return None
 
     def get_all_items(self):
-        pass
+        return self.table.scan().get("Items")
