@@ -3,6 +3,7 @@ from functools import reduce
 
 import boto3
 from boto3.dynamodb.conditions import Attr
+from chalice import BadRequestError, NotFoundError
 
 from chalicelib.crud import CRUD
 
@@ -29,11 +30,15 @@ class DynamoDB(CRUD):
             )
             return body
         except dynamodb_resource.meta.client.exceptions.ConditionalCheckFailedException:
-            return None
+            raise BadRequestError("Item id already exists")
 
     def get_item(self, item_id):
         response = self.table.get_item(Key={"id": item_id})
-        return response.get("Item")
+        item = response.get("Item")
+        if not item:
+            raise NotFoundError("Item not found")
+
+        return item
 
     def update_item(self, item_id, **body):
         try:
@@ -44,7 +49,7 @@ class DynamoDB(CRUD):
                 Expected={"id": {"Value": item_id, "Exists": True}},
             )
         except dynamodb_resource.meta.client.exceptions.ConditionalCheckFailedException:
-            return None
+            raise NotFoundError("Item not found")
 
     def delete_item(self, item_id):
         try:
@@ -53,7 +58,7 @@ class DynamoDB(CRUD):
                 Expected={"id": {"Value": item_id, "Exists": True}},
             )
         except dynamodb_resource.meta.client.exceptions.ConditionalCheckFailedException:
-            return None
+            raise NotFoundError("Item not found")
 
     def get_all_items(self, query={}):
         if query:
